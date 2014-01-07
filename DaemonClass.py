@@ -10,6 +10,7 @@ import mem
 import load
 import net
 import util
+from collections import OrderedDict
 
 
 def appendFile(content, filename):
@@ -21,26 +22,33 @@ def appendFile(content, filename):
         return
 
 def poll():
-    cpu_info = cpu.CPUInfo()
-    cpu_usage = cpu.CPUUsage()
+#    cpu_info = cpu.CPUInfo()
+    cpu_usage = cpu.CPUUsage_all()
     mem_info = mem.MemInfo()
-    net_info = net.NetStat()
-    load_info = load.LoadStat()
+#    net_info = net.NetStat()
+#    load_info = load.LoadStat()
 
-    poll_info = {}
-    poll_info['cpu_usage'] = cpu_usage
-    poll_info['cpu_num'] = len(cpu_info)
+    poll_info = OrderedDict()
+    for cpu_i in cpu_usage:
+        poll_info[cpu_i] = cpu_usage[cpu_i]
+
+#    poll_info['cpu_num'] = len(cpu_info)
     poll_info['mem_free'] = mem_info['MemFree']
     poll_info['mem_total'] = mem_info['MemTotal']
-    poll_info['load_1'] = load_info['load_1_min']
-    poll_info['load_5'] = load_info['load_5_min']
+    poll_info['mem_buffer'] = mem_info['Buffers']
+    poll_info['mem_cached'] = mem_info['Cached']
+    poll_info['mem_swapfree'] = mem_info['SwapFree']
 
-    poll_info['load_15'] = load_info['load_15_min']
-    for net_i in net_info:
-        poll_info[net_i+'_recv_bytes'] = net_info[net_i]['Receive']['bytes']
-        poll_info[net_i+'_trans_bytes'] = net_info[net_i]['Transmit']['bytes']
-        poll_info[net_i+'_recv_pkts'] = net_info[net_i]['Receive']['packets']
-        poll_info[net_i+'_trans_pkts'] = net_info[net_i]['Transmit']['packets']
+
+#    poll_info['load_1'] = load_info['load_1_min']
+#    poll_info['load_5'] = load_info['load_5_min']
+#    poll_info['load_15'] = load_info['load_15_min']
+
+#    for net_i in net_info:
+#        poll_info[net_i+'_recv_bytes'] = net_info[net_i]['Receive']['bytes']
+#        poll_info[net_i+'_trans_bytes'] = net_info[net_i]['Transmit']['bytes']
+#        poll_info[net_i+'_recv_pkts'] = net_info[net_i]['Receive']['packets']
+#        poll_info[net_i+'_trans_pkts'] = net_info[net_i]['Transmit']['packets']
     return poll_info
 
 
@@ -172,8 +180,8 @@ class Daemon:
             for item in poll_info:
                 content += '%s: %s\n' %(item, poll_info[item])
             content += '----------------------------\n\n'
-            appendFile(content, '/tmp/testwrite.log')
-            time.sleep(10)
+            appendFile(content, '/opt/testwrite.log')
+            time.sleep(3)
             c = c + 1
 
 if __name__ == "__main__":

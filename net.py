@@ -58,6 +58,3 @@ def NetStat():
     finally:
         return net_state
 
-
-if __name__=='__main__':
-    util.print_list(NetStat())

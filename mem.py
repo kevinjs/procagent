@@ -22,6 +22,3 @@ def MemInfo():
     finally:
         return mem_info
 
-if __name__=='__main__':
-    mem_info = MemInfo()
-    util.print_list(mem_info)

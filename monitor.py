@@ -13,8 +13,10 @@ import mem
 import load
 import net
 import util
+import re
 
 class TestMonitor(Daemon):
+    intvl = 10
     def __init__(self,
                pidfile='/tmp/test-monitor.pid',
                stdin='/dev/stdin',
@@ -23,9 +25,19 @@ class TestMonitor(Daemon):
                intvl=10,
                logfile='/opt/monitor.log'):
         Daemon.__init__(self, pidfile=pidfile, stdin=stdin, stdout=stdout, stderr=stderr)
-        self._intvl = intvl
+        TestMonitor.intvl = intvl
         self._logfile = logfile
-
+    
+    '''
+    Set poll interval
+    '''
+    def set_intvl(self, intvl):
+        if intvl >= 1:
+            TestMonitor.intvl = intvl
+    
+    '''
+    Basic poll task
+    '''
     def _poll(self):
         cpu_info = cpu.CPUInfo()
         cpu_usage = cpu.CPUUsage_all()
@@ -63,7 +75,7 @@ class TestMonitor(Daemon):
                 content += '%s: %s\n' %(item, poll_info[item])
             content += '----------------------------\n\n'
             util.appendFile(content, self._logfile)
-            time.sleep(self._intvl)
+            time.sleep(TestMonitor.intvl)
             c = c + 1
             
 if __name__ == "__main__":
@@ -80,6 +92,12 @@ if __name__ == "__main__":
         else:
             print 'Unknown command'
             sys.exit(2)
+    elif len(sys.argv) == 3:
+        if 'setintvl' == sys.argv[1]:
+            if re.match(r'^-?\d+$', sys.argv[2]) or re.match(r'^-?(\.\d+|\d+(\.\d+)?)', sys.argv[2]):
+                daemon.set_intvl(int(sys.argv[2]))
+                print 'Set interval: %s' %sys.argv[2]
+                daemon.restart()
     else:
         print 'USAGE: %s start/stop/restart' % sys.argv[0]
         sys.exit(2)

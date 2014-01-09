@@ -5,6 +5,7 @@
 
 import util
 import os
+from PollsterClass import Pollster
 
 '''
 Get load average info from /proc/loadavg
@@ -18,24 +19,32 @@ cat /proc/loadavg
 1/226 - num of running proc/proc total
 3941 - last pid
 '''
-def LoadStat():
-    load_stat = {}
-    load_info = None
-    f = None
-    
-    try:
-        if util.is_exist('/proc/loadavg'):
-            f = open('/proc/loadavg')
-            load_info = f.read().split()
-            if load_info and len(load_info) == 5:
-                load_stat['load_1_min'] = load_info[0]
-                load_stat['load_5_min'] = load_info[1]
-                load_stat['load_15_min'] = load_info[2]
-                load_stat['nr_thread'] = load_info[3]
-                load_stat['last_pid'] = load_info[4]
-    except:
-        print "Unexpected error:", sys.exc_info()[1] 
-    finally:
-        if f:
-            f.close()
-        return load_stat
+class LoadStatPollster(Pollster):
+    def __init__(self, name='load_stat'):
+        super(LoadStatPollster, self).__init__(name=name)
+
+    def getSample(self):
+        load_stat = {}
+        load_info = None
+        f = None
+        
+        try:
+            if util.is_exist('/proc/loadavg'):
+                f = open('/proc/loadavg')
+                load_info = f.read().split()
+                if load_info and len(load_info) == 5:
+                    load_stat['load_1_min'] = load_info[0]
+                    load_stat['load_5_min'] = load_info[1]
+                    load_stat['load_15_min'] = load_info[2]
+                    load_stat['nr_thread'] = load_info[3]
+                    load_stat['last_pid'] = load_info[4]
+        except:
+            print "Unexpected error:", sys.exc_info()[1] 
+        finally:
+            if f:
+                f.close()
+            return load_stat
+
+if __name__=='__main__':
+    load = LoadStatPollster(name='load')
+    util.print_list(load.getSample())

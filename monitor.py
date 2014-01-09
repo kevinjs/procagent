@@ -8,10 +8,11 @@ import json
 
 from DaemonClass import Daemon
 from collections import OrderedDict
-import cpu
-import mem
-import load
-import net
+from cpu import CPUInfoPollster
+from cpu import CPUUsagePollster
+from mem import MemInfoPollster
+from load import LoadStatPollster
+from net import NetStatPollster
 import util
 import re
 
@@ -39,11 +40,11 @@ class TestMonitor(Daemon):
     Basic poll task
     '''
     def _poll(self):
-        cpu_info = cpu.CPUInfo()
-        cpu_usage = cpu.CPUUsage_all()
-        mem_info = mem.MemInfo()
-        net_info = net.NetStat()
-        load_info = load.LoadStat()
+        cpu_info = CPUInfoPollster().getSample()
+        cpu_usage = CPUUsagePollster().getSample()
+        mem_info = MemInfoPollster().getSample()
+        net_info = NetStatPollster().getSample()
+        load_info = LoadStatPollster().getSample()
     
         poll_info = OrderedDict()
         for cpu_i in cpu_usage:

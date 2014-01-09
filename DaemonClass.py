@@ -12,53 +12,11 @@ import net
 import util
 from collections import OrderedDict
 
-
-def appendFile(content, filename):
-    if len(content) != 0:
-        output = open(filename, 'a')
-        output.write(content)
-        output.close()
-    else:
-        return
-
-def poll():
-#    cpu_info = cpu.CPUInfo()
-    cpu_usage = cpu.CPUUsage_all()
-    mem_info = mem.MemInfo()
-#    net_info = net.NetStat()
-#    load_info = load.LoadStat()
-
-    poll_info = OrderedDict()
-    for cpu_i in cpu_usage:
-        poll_info[cpu_i] = cpu_usage[cpu_i]
-
-#    poll_info['cpu_num'] = len(cpu_info)
-    poll_info['mem_free'] = mem_info['MemFree']
-    poll_info['mem_total'] = mem_info['MemTotal']
-    poll_info['mem_buffer'] = mem_info['Buffers']
-    poll_info['mem_cached'] = mem_info['Cached']
-    poll_info['mem_swapfree'] = mem_info['SwapFree']
-
-
-#    poll_info['load_1'] = load_info['load_1_min']
-#    poll_info['load_5'] = load_info['load_5_min']
-#    poll_info['load_15'] = load_info['load_15_min']
-
-#    for net_i in net_info:
-#        poll_info[net_i+'_recv_bytes'] = net_info[net_i]['Receive']['bytes']
-#        poll_info[net_i+'_trans_bytes'] = net_info[net_i]['Transmit']['bytes']
-#        poll_info[net_i+'_recv_pkts'] = net_info[net_i]['Receive']['packets']
-#        poll_info[net_i+'_trans_pkts'] = net_info[net_i]['Transmit']['packets']
-    return poll_info
-
-
 class Daemon:
     '''
     Usage: subclass the Daemon class and override the run() method
     '''
 
-#    def __init__(self, pidfile, stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
-#    def __init__(self, pidfile, intvl=10, wait=5, stdin='/dev/stdin', stdout='/dev/stdout', stderr='/dev/stderr'):
     def __init__(self, 
                  pidfile, 
                  stdin='/dev/stdin', 
@@ -68,9 +26,7 @@ class Daemon:
         self.stdout = stdout
         self.stderr = stderr
         self.pidfile = pidfile
-#        self.intvl = intvl
-#        self.wait = wait
-        
+       
     def daemonize(self):
         try:
             pid = os.fork()
@@ -89,8 +45,8 @@ class Daemon:
         try:
             pid = os.fork()
             if pid > 0:
-                        # exit from second parent
-                        sys.exit(0)
+                # exit from second parent
+                sys.exit(0)
         except OSError, e:
             sys.stderr.write("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
             sys.exit(1)

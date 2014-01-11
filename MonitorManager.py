@@ -28,9 +28,6 @@ class MonitorManager(Daemon):
 
         paras = util.load_conf('conf')
 
-        if not paras:
-            paras = {'intvl':intvl,'pollsters':None}
-
         MonitorManager._logfile = logfile
 
         if not paras.has_key('intvl'):

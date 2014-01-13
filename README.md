@@ -20,7 +20,10 @@ python MonitorManager.py stop
 # Restart monitor service
 python MonitorManager.py restart
 
-If you want extend your own pollsters, you can inherite the "PollsterClass" in PollsterClass.py and overload the "getSample" function.
+
+========================================
+
+P.S. If you want extend your own pollsters, you can subclass the "PollsterClass" and implement the getSample() method.
 
 
 Good luck

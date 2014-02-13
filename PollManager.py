@@ -17,8 +17,8 @@ class PollManager(Daemon):
     def __init__(self,
                pidfile='/tmp/poll_task.pid',
                stdin='/dev/stdin',
-               #stdout='/dev/stdout',
-               stdout='/tmp/poll_stdout.out',
+               stdout='/dev/stdout',
+               #stdout='/tmp/poll_stdout.out',
                stderr='/dev/stderr',
                intvl=10,
                wr_url='http://127.0.0.1:8655/'):

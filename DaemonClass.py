@@ -2,14 +2,7 @@
 
 import sys, os, time
 import atexit
-
 from signal import SIGTERM
-
-import cpu
-import mem
-import load
-import net
-import util
 from collections import OrderedDict
 
 class Daemon(object):
@@ -155,6 +148,3 @@ if __name__ == "__main__":
     else:
         print 'USAGE: %s start/stop/restart' % sys.argv[0]
         sys.exit(2)
-            
-        
-        

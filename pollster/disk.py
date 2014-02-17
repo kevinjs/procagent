@@ -75,7 +75,7 @@ class DiskStatPollster(Pollster):
         for item in disk_list:
             usg = self._getDiskUsage(item['mnt'])
             item['available'] = usg['available']
-            item['used'] = usg['used']
+            item['used'] = round(usg['used'], 4)
             item['capacity'] = usg['capacity']
             item['free'] = usg['free']
         return disk_list

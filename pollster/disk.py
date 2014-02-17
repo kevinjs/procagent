@@ -8,9 +8,9 @@ from collections import OrderedDict
 from PollsterClass import Pollster
 import util
 
-class DiskStatPollster(Pollster):
+class DiskUsagePollster(Pollster):
     def __init__(self, name='disk_stat'):
-        super(DiskStatPollster, self).__init__(name=name)
+        super(DiskUsagePollster, self).__init__(name=name)
 
     def _changeUnit(self, value):
         unit_list = ('B', 'KB', 'MB', 'GB', 'TB', 'PB')
@@ -80,8 +80,6 @@ class DiskStatPollster(Pollster):
             item['free'] = usg['free']
         return disk_list
 
-#{'available': 67, 'used': 0.14102564102564102, 'capacity': 78, 'free': 70}
-
 if __name__=='__main__':
-    disk = DiskStatPollster()
+    disk = DiskUsagePollster()
     util.print_list(disk.getSample())

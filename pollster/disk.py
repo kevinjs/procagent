@@ -12,6 +12,20 @@ class DiskStatPollster(Pollster):
     def __init__(self, name='disk_stat'):
         super(DiskStatPollster, self).__init__(name=name)
 
+    def _changeUnit(self, value):
+        unit_list = ('B', 'KB', 'MB', 'GB', 'TB', 'PB')
+        rate_list = (1, 
+                     1024, 
+                     1024*1024, 
+                     1024*1024*1024,
+                     1024*1024*1024*1024,
+                     1024*1024*1024*1024*1024,)
+
+        for unit, rate in zip(unit_list, rate_list):
+            tmp_value = float(value)/rate
+            if tmp_value >= 1 and tmp_value < 1024:
+                return {'volume':round(tmp_value, 2), 'unit':unit}
+
     def _getDiskPartitions(self, all=False):
         """Return all mountd partitions as a nameduple.
         If all == False return phyisical partitions only.
@@ -46,12 +60,12 @@ class DiskStatPollster(Pollster):
         disk = os.statvfs(path)
         ch_rate = 1024 * 1024 * 1024
         # Free blocks available to non-super user
-        hd['available'] = float(disk.f_bsize * disk.f_bavail) / ch_rate
+        hd['available'] = self._changeUnit(disk.f_bsize * disk.f_bavail)
         # Total number of free blocks
-        hd['free'] = float(disk.f_bsize * disk.f_bfree) / ch_rate
+        hd['free'] = self._changeUnit(disk.f_bsize * disk.f_bfree)
         # Total number of blocks in filesystem
-        hd['capacity'] = float(disk.f_bsize * disk.f_blocks) /ch_rate
-        hd['used'] = float(hd['capacity'] - hd['free'])/hd['capacity']
+        hd['capacity'] = self._changeUnit(disk.f_bsize * disk.f_blocks)
+        hd['used'] = float(hd['capacity']['volume'] - hd['free']['volume'])/hd['capacity']['volume']
         return hd
 
     def getSample(self):
@@ -60,10 +74,10 @@ class DiskStatPollster(Pollster):
         disk_list = self._getDiskPartitions()
         for item in disk_list:
             usg = self._getDiskUsage(item['mnt'])
-            item['available'] = dict(zip(key_list, [round(usg['available'], 2), 'GB']))
-            item['used'] = dict(zip(key_list, [round(usg['used'], 4) * 100, '%']))
-            item['capacity'] = dict(zip(key_list, [round(usg['capacity'], 2), 'GB']))
-            item['free'] = dict(zip(key_list, [round(usg['free'], 2), 'GB']))
+            item['available'] = usg['available']
+            item['used'] = usg['used']
+            item['capacity'] = usg['capacity']
+            item['free'] = usg['free']
         return disk_list
 
 #{'available': 67, 'used': 0.14102564102564102, 'capacity': 78, 'free': 70}

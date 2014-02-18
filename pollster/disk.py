@@ -67,12 +67,12 @@ class DiskUsagePollster(Pollster):
         disk = os.statvfs(path)
         ch_rate = 1024 * 1024 * 1024
         # Free blocks available to non-super user
-        hd['available'] = self._changeUnit(value=disk.f_bsize * disk.f_bavail)
+        hd['available'] = disk.f_bsize * disk.f_bavail
         # Total number of free blocks
-        hd['free'] = self._changeUnit(disk.f_bsize * disk.f_bfree)
+        hd['free'] = disk.f_bsize * disk.f_bfree
         # Total number of blocks in filesystem
-        hd['capacity'] = self._changeUnit(disk.f_bsize * disk.f_blocks)
-        hd['used'] = float(hd['capacity']['volume'] - hd['free']['volume'])/hd['capacity']['volume']
+        hd['capacity'] = disk.f_bsize * disk.f_blocks
+        hd['used'] = float(hd['capacity'] - hd['free'])/hd['capacity']
         return hd
 
     def getSample(self):
@@ -81,10 +81,10 @@ class DiskUsagePollster(Pollster):
         disk_list = self._getDiskPartitions()
         for item in disk_list:
             usg = self._getDiskUsage(item['mnt'])
-            item['available'] = usg['available']
+            item['available'] = self._changeUnit(value=usg['available'])
             item['used'] = round(usg['used'], 4)
-            item['capacity'] = usg['capacity']
-            item['free'] = usg['free']
+            item['capacity'] = self._changeUnit(value=usg['capacity'])
+            item['free'] = self._changeUnit(value=usg['free'])
         return disk_list
 
 if __name__=='__main__':

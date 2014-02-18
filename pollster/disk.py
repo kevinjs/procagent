@@ -12,19 +12,26 @@ class DiskUsagePollster(Pollster):
     def __init__(self, name='disk_stat'):
         super(DiskUsagePollster, self).__init__(name=name)
 
-    def _changeUnit(self, value):
+    def _changeUnit(self, value, force_unit=None):
         unit_list = ('B', 'KB', 'MB', 'GB', 'TB', 'PB')
-        rate_list = (1, 
-                     1024, 
-                     1024*1024, 
+        rate_list = (1,
+                     1024,
+                     1024*1024,
                      1024*1024*1024,
                      1024*1024*1024*1024,
                      1024*1024*1024*1024*1024,)
 
-        for unit, rate in zip(unit_list, rate_list):
-            tmp_value = float(value)/rate
-            if tmp_value >= 1 and tmp_value < 1024:
-                return {'volume':round(tmp_value, 2), 'unit':unit}
+        if force_unit:
+            if force_unit in unit_list:
+                tmp_value = float(value)/rate_list[unit_list.index(force_unit)]
+                return {'volume':round(tmp_value, 2), 'unit':force_unit}
+            else:
+                return {'volume':round(value, 2), 'unit':'B'}
+        else:
+            for unit, rate in zip(unit_list, rate_list):
+                tmp_value = float(value)/rate
+                if tmp_value >= 1 and tmp_value < 1024:
+                    return {'volume':round(tmp_value, 2), 'unit':unit}
 
     def _getDiskPartitions(self, all=False):
         """Return all mountd partitions as a nameduple.
@@ -60,7 +67,7 @@ class DiskUsagePollster(Pollster):
         disk = os.statvfs(path)
         ch_rate = 1024 * 1024 * 1024
         # Free blocks available to non-super user
-        hd['available'] = self._changeUnit(disk.f_bsize * disk.f_bavail)
+        hd['available'] = self._changeUnit(value=disk.f_bsize * disk.f_bavail)
         # Total number of free blocks
         hd['free'] = self._changeUnit(disk.f_bsize * disk.f_bfree)
         # Total number of blocks in filesystem

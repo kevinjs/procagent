@@ -9,6 +9,6 @@ python PollManager.py start
 # Set interval of polling as 10 sec
 python PollManager.py setintvl 10
 # Set pollsters
-python PollManager.py setpoll "['pollster.cpu.CPUUsagePollster','pollster.mem.MemInfoPollster','pollster.load.LoadStatPollster']"
+python PollManager.py setpoll "['pollster.cpu.CPUUsagePollster','pollster.mem.MemInfoPollster','pollster.load.LoadStatPollster','pollster.disk.DiskUsagePollster','pollster.net.NetStatPollster']"
 
 echo "Start all"

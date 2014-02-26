@@ -91,6 +91,6 @@ class CPUUsagePollster(Pollster):
     
             if total_1 and total_2:
                 for item in total_1:
-                    cpu_usage[item] = 100 * (1 - float(idle_2[item] - idle_1[item])/float(total_2[item] - total_1[item]))
+                    cpu_usage[item] = {'volume':round(100 * (1 - float(idle_2[item] - idle_1[item])/float(total_2[item] - total_1[item])), 2), 'unit':''}
         return cpu_usage       
 

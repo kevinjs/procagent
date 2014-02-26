@@ -38,6 +38,12 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(poll_str.encode())
             self.wfile.write('\n')
+        elif self.path == '/rstsvr':
+            pingPopen = subprocess.Popen(args='python PollManager.py restart', shell=True)
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write('Restart server ok!')
+            self.wfile.write('\n')
         else:
             self.send_response(404)
             self.end_headers()

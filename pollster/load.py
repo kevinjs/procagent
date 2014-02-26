@@ -33,9 +33,9 @@ class LoadStatPollster(Pollster):
                 f = open('/proc/loadavg')
                 load_info = f.read().split()
                 if load_info and len(load_info) == 5:
-                    load_stat['load_1_min'] = load_info[0]
-                    load_stat['load_5_min'] = load_info[1]
-                    load_stat['load_15_min'] = load_info[2]
+                    load_stat['load_1_min'] = {'volume':float(load_info[0]), 'unit':''}
+                    load_stat['load_5_min'] = {'volume':float(load_info[1]), 'unit':''}
+                    load_stat['load_15_min'] = {'volume':float(load_info[2]), 'unit':''}
                     load_stat['nr_thread'] = load_info[3]
                     load_stat['last_pid'] = load_info[4]
         except:

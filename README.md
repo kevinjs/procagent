@@ -1,30 +1,41 @@
-procagent
+#procagent
+
 =========
 
-Get system stat info from /proc
+A linux monitor agent. Fetch data from procfs.
 
-Usage:
+##Usage:
 
-# Start monitor service
-python MonitorManager.py start
+###1. Start polling task and http server.
+	./start.sh
 
-# Set the polling interval as 10 sec
-python MonitorManager.py setintvl 10
+###2. Stop polling task and http server.
+	./stop.sh
 
-# Set the pollsters list
-python MonitorManager.py setpoll "['cpu.CPUInfoPollster','mem.MemStatPollster']"
+###3. Get monitor data through http server.
+	curl -X GET http://IP_ADDR:8655/getdata
+	
+###4. Get polling interval through http server.
+	curl -X GET http://IP_ADDR:8655/getintvl
+	
+###5. Get pollsters list through http server.
+	curl -X GET http://IP_ADDR:8655/getpollsters
 
-# Stop monitor service
-python MonitorManager.py stop
+###6. Start polling task through shell
+	python PollManager.py start
 
-# Restart monitor service
-python MonitorManager.py restart
+###7. Stop polling task through shell
+	python PollManager.py stop
 
+###8. Restart polling task through shell
+	python PollManager.py restart
 
-========================================
+###9. Set polling interval as 10 sec through shell
+	python PollManager.py setintvl 10
 
-P.S. If you want extend your own pollsters, you can subclass the "PollsterClass" and implement the getSample() method.
+###10. Set pollsters
+	python PollManager.py setpoll "['pollster.cpu.CPUUsagePollster','pollster.mem.MemInfoPollster']"
 
+####PS. Add pollster in procagent/pollster if you like.
 
-Good luck
-dysj4099@gmail.com
+Edit by [Kevin Shaw : dysj4099@gmail.com](dysj4099@gmail.com)

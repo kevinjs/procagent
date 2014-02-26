@@ -81,10 +81,10 @@ class DiskUsagePollster(Pollster):
         disk_list = self._getDiskPartitions()
         for item in disk_list:
             usg = self._getDiskUsage(item['mnt'])
-            item['available'] = self._changeUnit(value=usg['available'])
+            item['available'] = self._changeUnit(value=usg['available'], force_unit='GB')
             item['used'] = round(usg['used'], 4)
-            item['capacity'] = self._changeUnit(value=usg['capacity'])
-            item['free'] = self._changeUnit(value=usg['free'])
+            item['capacity'] = self._changeUnit(value=usg['capacity'], force_unit='GB')
+            item['free'] = self._changeUnit(value=usg['free'], force_unit='GB')
         return disk_list
 
 if __name__=='__main__':

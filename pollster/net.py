@@ -22,25 +22,6 @@ class NetStatPollster(Pollster):
     def __init__(self, name='net_stat'):
         super(NetStatPollster, self).__init__(name=name)
 
-    def _changeUnit(self, value, force_unit=None):
-        unit_list = ('B/s', 'KB/s', 'MB/s', 'GB/s')
-        rate_list = (1,
-                     1024,
-                     1024*1024,
-                     1024*1024*1024)
-
-        if force_unit:
-            if force_unit in unit_list:
-                tmp_value = float(value)/rate_list[unit_list.index(force_unit)]
-                return {'volume':round(tmp_value, 2), 'unit':force_unit}
-            else:
-                return {'volume':round(value, 2), 'unit':'B/s'}
-        else:
-            for unit, rate in zip(unit_list, rate_list):
-                tmp_value = float(value)/rate
-                if (tmp_value >= 0 and tmp_value < 1024) or (unit_list.index(unit) == len(unit_list)-1):
-                    return {'volume':round(tmp_value, 2), 'unit':unit}
-
     def _get_data(self):
         net_state = OrderedDict()
         title = OrderedDict()
@@ -102,11 +83,11 @@ class NetStatPollster(Pollster):
         net_state_2, total_data_2 = self._get_data()
 
         flow_data={}
-        flow_data['net_bytes_in'] = self._changeUnit(value=int((total_data_2['net_bytes_in'] - total_data_1['net_bytes_in'])/intvl))
-        flow_data['net_bytes_out'] = self._changeUnit(value=int((total_data_2['net_bytes_out'] - total_data_1['net_bytes_out'])/intvl))
-        flow_data['net_pkts_in'] = self._changeUnit(value=int((total_data_2['net_pkts_in'] - total_data_1['net_pkts_in'])/intvl))
-        flow_data['net_pkts_out'] = self._changeUnit(value=int((total_data_2['net_pkts_out'] - total_data_1['net_pkts_out'])/intvl))
-        return net_state_2, flow_data
+        flow_data['net_bytes_in'] = {'volume':int((total_data_2['net_bytes_in'] - total_data_1['net_bytes_in'])/intvl), 'unit':'B/s'}
+        flow_data['net_bytes_out'] = {'volume':int((total_data_2['net_bytes_out'] - total_data_1['net_bytes_out'])/intvl), 'unit':'B/s'}
+        flow_data['net_pkts_in'] = {'volume':int((total_data_2['net_pkts_in'] - total_data_1['net_pkts_in'])/intvl), 'unit':'p/s'}
+        flow_data['net_pkts_out'] = {'volume':int((total_data_2['net_pkts_out'] - total_data_1['net_pkts_out'])/intvl), 'unit':'p/s'}
+        return flow_data
 
 if __name__=='__main__':
     net_stat = NetStatPollster()

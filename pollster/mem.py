@@ -41,7 +41,7 @@ class MemInfoPollster(Pollster):
                         if len(tmp) == 2:
                             vol_unit = tmp[1].strip().split(' ')
                             if len(vol_unit) == 2:
-                                tmp_value = self._changeUnit(value=long(vol_unit[0]))
+                                tmp_value = self._changeUnit(value=long(vol_unit[0]), force_unit='MB')
                             elif len(vol_unit) == 1:
                                 tmp_value = {'volume':long(long(vol_unit[0])), 'unit':''}
                             mem_info[tmp[0].strip()] = tmp_value

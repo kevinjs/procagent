@@ -13,4 +13,15 @@ sleep 1
 # Stop HttpServer
 ps -ef | grep HttpServer.py | grep -v grep | awk '{print $ 2}' | xargs kill
 
+# remove check task from /etc/cron.d
+cron_procagent="/etc/cron.d/procagent"
+
+if [ -f "$cron_procagent" ]; then  
+    rm ${cron_procagent}
+
+    /etc/init.d/cron restart
+
+    echo "Remove crontab done"
+fi
+
 echo "Terminate all"

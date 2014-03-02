@@ -26,6 +26,8 @@ fi
 
 # add check task to /etc/cron.d
 cron_procagent="/etc/cron.d/procagent"
+cron_path="/usr/sbin/cron"
+crond_path="/usr/sbin/crond"
 
 if [ ! -f "$cron_procagent" ]; then  
 
@@ -34,7 +36,12 @@ SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 */5 * * * * root /bin/bash ${workspace}/start.sh
 _done_
-    /etc/init.d/cron restart
+    if [ -f "$cron_path" ]; then
+        service cron restart
+    elif [ -f "$crond_path" ]; then
+        service crond restart
+    fi
+
     echo "Add crontab done"
 fi
 

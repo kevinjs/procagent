@@ -24,6 +24,34 @@ then
     echo "Start Polling task done"
 fi
 
+# add start.sh to rc.local
+rc_local_f1="/etc/rc.d/rc.local"
+rc_local_f2="/etc/rc.local"
+command="/bin/bash $workspace/start.sh"
+
+if [ -f "$rc_local_f1" ]; then
+    is_exist=`grep -n "$command" $rc_local_f1`
+    has_exit_0=`grep -n "exit 0" $rc_local_f1`
+
+    if [ -z "$is_exist" ]; then
+        if [ -z "$has_exit_0" ]; then
+            echo $command >> $rc_local_f1
+        else
+            sed -i "/exit 0/ i $command" $rc_local_f1
+        fi
+    fi
+else
+    cat > $rc_local_f1 << _done_
+#!/bin/sh
+$command
+exit 0
+_done_
+fi
+
+if [ ! -h "$rc_local_f2" ]; then
+    ln -s $rc_local_f1 $rc_local_f2
+fi
+
 # add check task to /etc/cron.d
 cron_procagent="/etc/cron.d/procagent"
 cron_path="/usr/sbin/cron"

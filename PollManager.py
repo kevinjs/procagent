@@ -82,6 +82,7 @@ class PollManager(Daemon):
             #wr_obj['timestamp'] = time.asctime(time.localtime())
             wr_obj['hostname'] = socket.gethostname()
             wr_obj['ip_address'] = socket.gethostbyname(wr_obj['hostname'])
+            wr_obj['timestamp'] = time.asctime(time.localtime())
             util.wr_data('%s%s' %(self._wr_url, 'setdata'), wr_obj)
             time.sleep(self._intvl)
             c += 1

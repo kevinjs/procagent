@@ -15,11 +15,21 @@ class Handler(BaseHTTPRequestHandler):
     content = {}
     intvl = 10
     pollsters = []
+    
+    # timestamp of get from host
+    ts_get = None
 
     def do_GET(self):
         if self.path == '/getdata':
             self.send_response(200)
             self.send_header("Content-type", "text/json")
+            print '%s - %s' %(Handler.content['timestamp'], Handler.ts_get)
+            if Handler.content['timestamp'] != Handler.ts_get:
+                Handler.content['status'] = 'NORMAL'
+                Handler.ts_get = Handler.content['timestamp']
+            else:
+                Handler.content['status'] = 'POLLING_TIMEOUT'
+                Handler.content['data'] = {}
             obj_str = json.dumps(Handler.content)
             self.send_header("Content-Length", str(len(obj_str)))
             self.end_headers()

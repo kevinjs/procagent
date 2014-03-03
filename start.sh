@@ -19,7 +19,7 @@ PID_poll=`ps -ef | grep PollManager.py | grep -v grep | awk '{print $2}'`
 if [ -z "$PID_poll" ]
 then
     python ${workspace}/PollManager.py start
-    python ${workspace}/PollManager.py setintvl 10
+    python ${workspace}/PollManager.py setintvl 6
     python ${workspace}/PollManager.py setpoll "['pollster.cpu.CPUUsagePollster','pollster.mem.MemInfoPollster','pollster.load.LoadStatPollster','pollster.disk.DiskUsagePollster','pollster.net.NetStatPollster']"
     echo "Start Polling task done"
 fi
@@ -50,7 +50,10 @@ else
 #!/bin/sh
 $command
 exit 0
+    chmod a+x $rc_local_file
 _done_
+
+    chmod a+x $rc_local_file
 fi
 
 # add check task to /etc/cron.d

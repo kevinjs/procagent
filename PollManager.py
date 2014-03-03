@@ -16,10 +16,10 @@ class PollManager(Daemon):
 
     def __init__(self,
                pidfile='/tmp/poll_task.pid',
-               stdin='/dev/stdin',
-               stdout='/dev/stdout',
+               stdin='/dev/null',
+               stdout='/dev/null',
                #stdout='/tmp/poll_stdout.out',
-               stderr='/dev/stderr',
+               stderr='/dev/null',
                intvl=10,
                wr_url='http://127.0.0.1:8655/'):
         super(PollManager, self).__init__(pidfile=pidfile, stdin=stdin, stdout=stdout, stderr=stderr)

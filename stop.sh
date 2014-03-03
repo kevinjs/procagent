@@ -1,11 +1,13 @@
 #!/bin/bash
 
+workspace=$(cd `dirname $0`; pwd)
+
 # Stop polling
 PID_poll=`ps -ef | grep PollManager.py | grep -v grep | awk '{print $2}'`
 
 if [ -n "$PID_poll" ]
 then
-    python PollManager.py stop
+    python ${workspace}/PollManager.py stop
 fi
 
 sleep 1

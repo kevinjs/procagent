@@ -146,7 +146,6 @@ class DiskUsagePollster(Pollster):
 
     def getSample(self):
         disk_list = self._getDiskPartitions()
-        util.print_list(disk_list)
         # disk io
         disk_io = self._getDiskIO(disk_list)
 

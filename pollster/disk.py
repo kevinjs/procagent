@@ -62,7 +62,7 @@ class DiskUsagePollster(Pollster):
         if dev_list:
             dev_data = {}
             for item in dev_list:
-                dev_short = item['dev'][item['dev'].rindex('/')+1:]
+                dev_short = item['dev'][item['dev'].rfind('/')+1:]
                 dev_data[dev_short] = {}
 
             intvl = 1
@@ -106,10 +106,17 @@ class DiskUsagePollster(Pollster):
         for line in f:
             if not line.startswith("nodev"):
                 phydevs.append(line.strip())
-    
+        
+        # Add nfs4 and glusterfs
+        if 'nfs4' not in phydevs:
+            phydevs.append('nfs4')
+        if 'fuse.glusterfs' not in phydevs:
+            phydevs.append('fuse.glusterfs')
+
         retlist = []
         f = open('/etc/mtab', "r")
         for line in f:
+            #if not all and line.startswith('none'):
             if not all and line.startswith('none'):
                 continue
             fields = line.split()
@@ -139,6 +146,7 @@ class DiskUsagePollster(Pollster):
 
     def getSample(self):
         disk_list = self._getDiskPartitions()
+        util.print_list(disk_list)
         # disk io
         disk_io = self._getDiskIO(disk_list)
 
@@ -146,7 +154,7 @@ class DiskUsagePollster(Pollster):
         for item in disk_list:
             usg = self._getDiskUsage(item['mnt'])
 
-            dev_short = item['dev'][item['dev'].rindex('/')+1:]
+            dev_short = item['dev'][item['dev'].rfind('/')+1:]
             disk_usage[dev_short] = {}
             disk_usage[dev_short]['mnt'] = item['mnt']
             disk_usage[dev_short]['fstype'] = item['fstype']

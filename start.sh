@@ -50,10 +50,9 @@ else
 #!/bin/sh
 $command
 exit 0
-    chmod a+x $rc_local_file
 _done_
-
     chmod a+x $rc_local_file
+    systemctl start rc-local.service
 fi
 
 # add check task to /etc/cron.d

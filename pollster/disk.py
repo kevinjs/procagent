@@ -149,6 +149,10 @@ class DiskUsagePollster(Pollster):
         # disk io
         disk_io = self._getDiskIO(disk_list)
 
+        total_available = 0
+        total_capacity = 0
+        total_free = 0
+
         disk_usage = {}
         for item in disk_list:
             usg = self._getDiskUsage(item['mnt'])
@@ -159,11 +163,22 @@ class DiskUsagePollster(Pollster):
             disk_usage[dev_short]['fstype'] = item['fstype']
             disk_usage[dev_short]['dev'] = item['dev']
             disk_usage[dev_short]['available'] = self._changeUnit(value=usg['available'], force_unit='GB')
+            total_available += disk_usage[dev_short]['available']['volume']
+
             disk_usage[dev_short]['used'] = round(usg['used'], 4)
             disk_usage[dev_short]['capacity'] = self._changeUnit(value=usg['capacity'], force_unit='GB')
+            total_capacity += disk_usage[dev_short]['capacity']['volume']
+
             disk_usage[dev_short]['free'] = self._changeUnit(value=usg['free'], force_unit='GB')
+            total_free += disk_usage[dev_short]['free']['volume']
+
             if disk_io.has_key(dev_short):
                 disk_usage[dev_short]['io_stat'] = disk_io[dev_short]
+
+        disk_usage['total_available'] = total_available
+        disk_usage['total_capacity'] = total_capacity
+        disk_usage['total_free'] = total_free
+
         return disk_usage
 
     def test(self):

@@ -26,4 +26,8 @@ if [ -f "$cron_procagent" ]; then
     echo "Remove crontab done"
 fi
 
+if [ -f "/tmp/httpsvr.log" ]; then
+    rm /tmp/httpsvr.log
+fi
+
 echo "Terminate all"

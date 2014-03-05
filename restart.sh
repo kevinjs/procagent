@@ -11,6 +11,11 @@ then
 fi
 
 ps -ef | grep HttpServer.py | grep -v grep | awk '{print $ 2}' | xargs kill
+
+if [ -f "/tmp/httpsvr.log" ]; then
+    rm /tmp/httpsvr.log
+fi
+
 echo "Stop HttpServer done"
 
 sleep 1

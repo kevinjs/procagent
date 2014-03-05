@@ -2,6 +2,8 @@ from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from SocketServer import ThreadingMixIn
 import threading
 import json
+from datetime import datetime
+import time
 
 # Look up the full hostname using gethostbuaddr() is too slow.
 import BaseHTTPServer
@@ -17,19 +19,23 @@ class Handler(BaseHTTPRequestHandler):
     pollsters = []
     
     # timestamp of get from host
-    ts_get = None
+    ts_get = ''
 
     def do_GET(self):
         if self.path == '/getdata':
             self.send_response(200)
             self.send_header("Content-type", "text/json")
-            print '%s - %s' %(Handler.content['timestamp'], Handler.ts_get)
-            if Handler.content['timestamp'] != Handler.ts_get:
+            Handler.ts_get = time.asctime(time.localtime())
+
+            t_content = datetime.strptime(Handler.content['timestamp'], "%a %b %d %H:%M:%S %Y")
+            t_last_get = datetime.strptime(Handler.ts_get, "%a %b %d %H:%M:%S %Y")
+
+            if (t_last_get - t_content).seconds < 60:
                 Handler.content['status'] = 'NORMAL'
-                Handler.ts_get = Handler.content['timestamp']
             else:
                 Handler.content['status'] = 'POLLING_TIMEOUT'
                 Handler.content['data'] = {}
+
             obj_str = json.dumps(Handler.content)
             self.send_header("Content-Length", str(len(obj_str)))
             self.end_headers()

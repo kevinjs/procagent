@@ -7,7 +7,7 @@ PID_httpsvr=`ps -ef | grep HttpServer.py | grep -v grep | awk '{print $2}'`
 
 if [ -z "$PID_httpsvr" ]
 then
-    nohup python ${workspace}/HttpServer.py > /tmp/httpsvr.log 2>&1 &
+    nohup python ${workspace}/HttpServer.py ${workspace} > /tmp/httpsvr.log 2>&1 &
     echo "Start HttpServer done"
 fi
 

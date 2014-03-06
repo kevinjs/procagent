@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 import time
 import subprocess
+import sys
 
 # Look up the full hostname using gethostbuaddr() is too slow.
 import BaseHTTPServer
@@ -18,6 +19,8 @@ class Handler(BaseHTTPRequestHandler):
     content = {}
     intvl = 10
     pollsters = ['pollster.cpu.CPUUsagePollster','pollster.mem.MemInfoPollster','pollster.load.LoadStatPollster','pollster.disk.DiskUsagePollster','pollster.net.NetStatPollster']
+
+    poll_path = '/usr/local/procagent'
     
     # timestamp of get from host
     ts_get = ''
@@ -36,7 +39,7 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 Handler.content['status'] = 'POLLING_TIMEOUT'
                 Handler.content['data'] = {}
-                pingPopen = subprocess.Popen(args='python PollManager.py restart', shell=True)
+                pingPopen = subprocess.Popen(args='python %s/PollManager.py restart' % (Handler.poll_path), shell=True)
             obj_str = json.dumps(Handler.content)
             self.send_header("Content-Length", str(len(obj_str)))
             self.end_headers()
@@ -56,7 +59,7 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(poll_str.encode())
             self.wfile.write('\n')
         elif self.path == '/rstsvr':
-            pingPopen = subprocess.Popen(args='python PollManager.py restart', shell=True)
+            pingPopen = subprocess.Popen(args='python %s/PollManager.py restart' % (Handler.poll_path), shell=True)
             self.send_response(200)
             self.end_headers()
             self.wfile.write('Restart server ok!')
@@ -101,6 +104,8 @@ if __name__ == '__main__':
     server = None
     try:
         server = ThreadedHTTPServer(('0.0.0.0', 8655), Handler)
+        if sys.argv[1]:
+            Handler.poll_path = sys.argv[1]
         print 'Starting server, use <Ctrl-C> to stop'
         server.serve_forever()
     except:

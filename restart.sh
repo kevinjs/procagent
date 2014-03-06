@@ -18,7 +18,7 @@ fi
 
 echo "Stop HttpServer done"
 
-nohup python ${workspace}/HttpServer.py > /tmp/httpsvr.log 2>&1 &
+nohup python ${workspace}/HttpServer.py ${workspace} > /tmp/httpsvr.log 2>&1 &
 echo "Start HttpServer done"
 
 sleep .5

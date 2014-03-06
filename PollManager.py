@@ -15,7 +15,7 @@ class PollManager(Daemon):
     _wr_url = None
 
     def __init__(self,
-               pidfile='/tmp/poll_task.pid',
+               pidfile='/tmp/daemoncls.pid',
                stdin='/dev/null',
                stdout='/dev/null',
                #stdout='/tmp/poll_stdout.out',
@@ -88,7 +88,7 @@ class PollManager(Daemon):
             c += 1
 
 if __name__ == "__main__":
-    daemon = PollManager(pidfile='/tmp/test-monitor.pid', 
+    daemon = PollManager(pidfile='/tmp/polling_task.pid', 
                            intvl=10) 
     if len(sys.argv) == 2:
         if 'start' == sys.argv[1]:

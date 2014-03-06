@@ -30,4 +30,12 @@ if [ -f "/tmp/httpsvr.log" ]; then
     rm /tmp/httpsvr.log
 fi
 
+if [ -f "/etc/rc.d/rc.local" ]; then
+    sed -i "/procagent/d" /etc/rc.d/rc.local
+    echo "Remove task from /etc/rc.d/rc.local"
+elif [ -f "/etc/rc.local" ]; then
+    sed -i "/procagent/d" /etc/rc.local
+    echo "Remove task from /etc/rc.local"
+fi
+
 echo "Terminate all"

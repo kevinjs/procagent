@@ -4,6 +4,7 @@ import threading
 import json
 from datetime import datetime
 import time
+import subprocess
 
 # Look up the full hostname using gethostbuaddr() is too slow.
 import BaseHTTPServer
@@ -35,7 +36,7 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 Handler.content['status'] = 'POLLING_TIMEOUT'
                 Handler.content['data'] = {}
-
+                pingPopen = subprocess.Popen(args='python PollManager.py restart', shell=True)
             obj_str = json.dumps(Handler.content)
             self.send_header("Content-Length", str(len(obj_str)))
             self.end_headers()

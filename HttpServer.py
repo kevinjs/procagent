@@ -17,7 +17,7 @@ BaseHTTPServer.BaseHTTPRequestHandler.address_string = not_insance_address_strin
 class Handler(BaseHTTPRequestHandler):
     content = {}
     intvl = 10
-    pollsters = []
+    pollsters = ['pollster.cpu.CPUUsagePollster','pollster.mem.MemInfoPollster','pollster.load.LoadStatPollster','pollster.disk.DiskUsagePollster','pollster.net.NetStatPollster']
     
     # timestamp of get from host
     ts_get = ''
@@ -36,7 +36,7 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 Handler.content['status'] = 'POLLING_TIMEOUT'
                 Handler.content['data'] = {}
-                pingPopen = subprocess.Popen(args='/bin/bash restart.sh', shell=True)
+                pingPopen = subprocess.Popen(args='python PollManager.py restart', shell=True)
             obj_str = json.dumps(Handler.content)
             self.send_header("Content-Length", str(len(obj_str)))
             self.end_headers()
@@ -56,7 +56,7 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(poll_str.encode())
             self.wfile.write('\n')
         elif self.path == '/rstsvr':
-            pingPopen = subprocess.Popen(args='/bin/bash restart.sh', shell=True)
+            pingPopen = subprocess.Popen(args='python PollManager.py restart', shell=True)
             self.send_response(200)
             self.end_headers()
             self.wfile.write('Restart server ok!')

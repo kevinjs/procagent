@@ -16,10 +16,8 @@ sleep 1
 # check if PollManager is running
 PID_poll=`ps -ef | grep PollManager.py | grep -v grep | awk '{print $2}'`
 
-if [ -z "$PID_poll" ]; then
-    if [ -f "/tmp/polling_task.pid" ]; then
-        rm /tmp/polling_task.pid
-    fi
+if [ -z "$PID_poll" ]
+then
     python ${workspace}/PollManager.py start
     python ${workspace}/PollManager.py setintvl 6
     python ${workspace}/PollManager.py setpoll "['pollster.cpu.CPUUsagePollster','pollster.mem.MemInfoPollster','pollster.load.LoadStatPollster','pollster.disk.DiskUsagePollster','pollster.net.NetStatPollster']"

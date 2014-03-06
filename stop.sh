@@ -8,10 +8,6 @@ PID_poll=`ps -ef | grep PollManager.py | grep -v grep | awk '{print $2}'`
 if [ -n "$PID_poll" ]
 then
     python ${workspace}/PollManager.py stop
-else
-    if [ -f "/tmp/polling_task.pid" ]; then
-        rm /tmp/polling_task.pid
-    fi
 fi
 
 sleep 1

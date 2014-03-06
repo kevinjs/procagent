@@ -11,9 +11,11 @@ then
 fi
 
 ps -ef | grep HttpServer.py | grep -v grep | awk '{print $ 2}' | xargs kill
+
 if [ -f "/tmp/httpsvr.log" ]; then
     rm /tmp/httpsvr.log
 fi
+
 echo "Stop HttpServer done"
 
 nohup python ${workspace}/HttpServer.py > /tmp/httpsvr.log 2>&1 &
@@ -21,9 +23,6 @@ echo "Start HttpServer done"
 
 sleep .5
 
-if [ -f "/tmp/polling_task.pid" ];then
-    rm /tmp/polling_task.pid
-fi
 python ${workspace}/PollManager.py start
 python ${workspace}/PollManager.py setintvl 10
 python ${workspace}/PollManager.py setpoll "['pollster.cpu.CPUUsagePollster','pollster.mem.MemInfoPollster','pollster.load.LoadStatPollster','pollster.disk.DiskUsagePollster','pollster.net.NetStatPollster']"

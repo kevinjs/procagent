@@ -84,7 +84,7 @@ def rd_data(url):
     res = None
     try:
         req = urllib2.Request(url)
-        res = urllib2.urlopen(req)
+        res = urllib2.urlopen(req, timeout=5)
         return res.read()
     except urllib2.URLError, e:
         return False
@@ -100,7 +100,7 @@ def wr_data(url, obj):
     res = None
     try:
         req = urllib2.Request(url, data, {'Content-Type': 'application/json'})
-        res = urllib2.urlopen(req)
+        res = urllib2.urlopen(req, timeout=5)
         return res.read()
     except urllib2.URLError, e:
         print e.reason

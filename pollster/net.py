@@ -87,11 +87,17 @@ class NetStatPollster(Pollster):
         flow_data['net_bytes_out'] = {'volume':int((total_data_2['net_bytes_out'] - total_data_1['net_bytes_out'])/intvl), 'unit':'B/s'}
         flow_data['net_pkts_in'] = {'volume':int((total_data_2['net_pkts_in'] - total_data_1['net_pkts_in'])/intvl), 'unit':'p/s'}
         flow_data['net_pkts_out'] = {'volume':int((total_data_2['net_pkts_out'] - total_data_1['net_pkts_out'])/intvl), 'unit':'p/s'}
+        flow_data['net_bytes_in_sum'] = {'volume':int(total_data_2['net_bytes_in']), 'unit':'B'}
+        flow_data['net_bytes_out_sum'] = {'volume':int(total_data_2['net_bytes_out']), 'unit':'B'}
+
         return flow_data
+
+    def test(self):
+        net_state, total_data = self._get_data()
+
+        util.print_list(net_state)
+        util.print_list(total_data)
 
 if __name__=='__main__':
     net_stat = NetStatPollster()
-    stat, flow = net_stat.getSample()
-    util.print_list(stat)
-    print '*' * 30
-    util.print_list(flow)
+    net_stat.test()

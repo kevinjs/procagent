@@ -1,7 +1,5 @@
 #procagent
 
-=========
-
 A linux monitor agent. Fetch data from procfs.
 
 ##Usage:
@@ -38,5 +36,4 @@ A linux monitor agent. Fetch data from procfs.
 
 ####PS. Add pollster in procagent/pollster if you like.
 
-Edit by Kevin Shaw 
-dysj4099@gmail.com
+Edit by Kevin Shaw dysj4099@gmail.com

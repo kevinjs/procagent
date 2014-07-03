@@ -20,7 +20,7 @@ if [ -z "$PID_poll" ]
 then
     python ${workspace}/PollManager.py start
     python ${workspace}/PollManager.py setintvl 6
-    python ${workspace}/PollManager.py setpoll "['pollster.cpu.CPUUsagePollster','pollster.mem.MemInfoPollster','pollster.load.LoadStatPollster','pollster.disk.DiskUsagePollster','pollster.net.NetStatPollster']"
+    python ${workspace}/PollManager.py setpoll "['pollster.cpu.CPUUsagePollster','pollster.mem.MemInfoPollster','pollster.load.LoadStatPollster','pollster.disk.DiskUsagePollster','pollster.net.NetStatPollster','pollster.uptime.UptimePollster']"
     echo "Start Polling task done"
 fi
 

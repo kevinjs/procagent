@@ -78,14 +78,17 @@ class PollManager(Daemon):
         c = 0
         while True:
             wr_obj = {}
-            wr_obj['data'] = self._poll()
-            #wr_obj['timestamp'] = time.asctime(time.localtime())
-            wr_obj['hostname'] = socket.gethostname()
-            wr_obj['ip_address'] = socket.gethostbyname(wr_obj['hostname'])
-            wr_obj['timestamp'] = time.asctime(time.localtime())
-            util.wr_data('%s%s' %(self._wr_url, 'setdata'), wr_obj)
-            time.sleep(self._intvl)
-            c += 1
+            try:
+                wr_obj['data'] = self._poll()
+                wr_obj['timestamp'] = time.asctime(time.localtime())
+                wr_obj['hostname'] = socket.gethostname()
+                wr_obj['ip_address'] = socket.gethostbyname(wr_obj['hostname'])
+            except socket.gaierror, e:
+                wr_obj['ip_address'] = '' 
+            finally:
+                util.wr_data('%s%s' %(self._wr_url, 'setdata'), wr_obj)
+                time.sleep(self._intvl)
+                c += 1
 
 if __name__ == "__main__":
     daemon = PollManager(pidfile='/tmp/polling_task.pid', 
